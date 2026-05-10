@@ -1,0 +1,43 @@
+name: "Test - jackrabbit-oak: LdapLoginStandaloneTest#testLoginSetsAuthInfo"
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  confirm-flaky:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Clone jackrabbit-oak at specific SHA
+        run: |
+          git clone https://github.com/apache/jackrabbit-oak.git
+          cd jackrabbit-oak
+          git checkout 0440e096dc7a460d206c77a5f178796db31a0ef4
+
+      - name: Build module and dependencies
+        working-directory: jackrabbit-oak
+        run: |
+          mvn clean install -DskipTests \
+            -pl oak-auth-ldap -am 
+
+      - name: Run test WITHOUT NonDex (should PASS)
+        working-directory: jackrabbit-oak
+        run: |
+          mvn test \
+            -pl oak-auth-ldap \
+            -Dtest=org.apache.jackrabbit.oak.security.authentication.ldap.LdapLoginStandaloneTest#testLoginSetsAuthInfo
+
+      - name: Run test WITH NonDex (should FAIL)
+        working-directory: jackrabbit-oak
+        run: |
+          mvn edu.illinois:nondex-maven-plugin:2.1.1:nondex \
+            -pl oak-auth-ldap \
+            -Dtest=org.apache.jackrabbit.oak.security.authentication.ldap.LdapLoginStandaloneTest#testLoginSetsAuthInfo
