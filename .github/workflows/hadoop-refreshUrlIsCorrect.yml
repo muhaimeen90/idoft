@@ -1,0 +1,43 @@
+name: "Test - hadoop: TestClientCredentialTimeBasedTokenRefresher#refreshUrlIsCorrect"
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  confirm-flaky:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Clone hadoop at specific SHA
+        run: |
+          git clone https://github.com/apache/hadoop.git
+          cd hadoop
+          git checkout 14cd969b6ea1898e9db6eeb9ea5292ec4558a706
+
+      - name: Build module and dependencies
+        working-directory: hadoop
+        run: |
+          mvn clean install -DskipTests \
+            -pl hadoop-hdfs-project/hadoop-hdfs-client -am
+
+      - name: Run test WITHOUT NonDex (should PASS)
+        working-directory: hadoop
+        run: |
+          mvn test \
+            -pl hadoop-hdfs-project/hadoop-hdfs-client \
+            -Dtest=org.apache.hadoop.hdfs.web.oauth2.TestClientCredentialTimeBasedTokenRefresher#refreshUrlIsCorrect
+
+      - name: Run test WITH NonDex (should FAIL)
+        working-directory: hadoop
+        run: |
+          mvn edu.illinois:nondex-maven-plugin:2.1.1:nondex \
+            -pl hadoop-hdfs-project/hadoop-hdfs-client \
+            -Dtest=org.apache.hadoop.hdfs.web.oauth2.TestClientCredentialTimeBasedTokenRefresher#refreshUrlIsCorrect
