@@ -26,19 +26,19 @@ jobs:
         working-directory: jbpm
         run: |
           mvn clean install -DskipTests \
-            -pl jbpm-case-mgmt/jbpm-case-mgmt-impl -am \
+            -pl jbpm-services/jbpm-kie-services -am \
             -Denforcer.skip=true
 
       - name: Run test WITHOUT NonDex 
         working-directory: jbpm
         run: |
           mvn test \
-            -pl jbpm-case-mgmt/jbpm-case-mgmt-impl \
-            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries
+            -pl jbpm-services/jbpm-kie-services \
+            -Dtest=org.jbpm.kie.services.test.UserTaskServiceImplAuditNoneTest#testCompleteAutoProgress
 
       - name: Run test WITH NonDex 
         working-directory: jbpm
         run: |
           mvn edu.illinois:nondex-maven-plugin:2.1.1:nondex \
-            -pl jbpm-case-mgmt/jbpm-case-mgmt-impl \
-            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries
+            -pl jbpm-services/jbpm-kie-services \
+            -Dtest=org.jbpm.kie.services.test.UserTaskServiceImplAuditNoneTest#testCompleteAutoProgress

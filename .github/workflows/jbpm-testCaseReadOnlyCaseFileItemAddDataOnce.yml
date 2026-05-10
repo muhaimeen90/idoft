@@ -1,4 +1,4 @@
-name: "Test - jbpm: CaseServiceImplTest#testCaseRolesWithQueries"
+name: "Test - jbpm: CaseServiceImplTest#testCaseReadOnlyCaseFileItemAddDataOnce"
 
 on:
   push:
@@ -34,11 +34,11 @@ jobs:
         run: |
           mvn test \
             -pl jbpm-case-mgmt/jbpm-case-mgmt-impl \
-            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries
+            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseReadOnlyCaseFileItemAddDataOnce
 
       - name: Run test WITH NonDex 
         working-directory: jbpm
         run: |
           mvn edu.illinois:nondex-maven-plugin:2.1.1:nondex \
             -pl jbpm-case-mgmt/jbpm-case-mgmt-impl \
-            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries
+            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseReadOnlyCaseFileItemAddDataOnce
