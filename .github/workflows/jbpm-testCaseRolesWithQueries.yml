@@ -34,9 +34,7 @@ jobs:
         run: |
           mvn test \
             -pl jbpm-case-mgmt/jbpm-case-mgmt-impl \
-            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries \
-            -Dsurefire.failIfNoSpecifiedTests=false \
-            -Drat.skip=true -Dlicense.skip=true -Dcheckstyle.skip=true
+            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries
 
       - name: Run test WITH NonDex 
         working-directory: jbpm
@@ -44,5 +42,3 @@ jobs:
           mvn edu.illinois:nondex-maven-plugin:2.1.1:nondex \
             -pl jbpm-case-mgmt/jbpm-case-mgmt-impl \
             -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries \
-            -DnondexRuns=10 \
-            -Drat.skip=true -Dlicense.skip=true -Dcheckstyle.skip=true
