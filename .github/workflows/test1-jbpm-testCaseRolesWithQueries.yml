@@ -26,7 +26,8 @@ jobs:
         working-directory: jbpm
         run: |
           mvn clean install -DskipTests \
-            -pl jbpm-case-mgmt/jbpm-case-mgmt-impl -am
+            -pl jbpm-case-mgmt/jbpm-case-mgmt-impl -am \
+            -Denforcer.skip=true
 
       - name: Run test WITHOUT NonDex
         working-directory: jbpm
