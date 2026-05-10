@@ -1,4 +1,4 @@
-name: "Test - jbpm: CaseServiceImplTest#testCaseRolesWithQueries"
+name: "Test - jbpm: UserTaskServiceImplAuditNoneTest.testCompleteAutoProgress"
 
 on:
   push:
