@@ -1,0 +1,43 @@
+name: "Test 1 - jbpm: CaseServiceImplTest#testCaseRolesWithQueries"
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  confirm-flaky:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Clone jbpm at specific SHA
+        run: |
+          git clone https://github.com/kiegroup/jbpm.git
+          cd jbpm
+          git checkout f7e80e82b7670c09485ce83869a287ef51dcb59c
+
+      - name: Build module and dependencies
+        working-directory: jbpm
+        run: |
+          mvn clean install -DskipTests \
+            -pl jbpm-case-mgmt/jbpm-case-mgmt-impl -am
+
+      - name: Run test WITHOUT NonDex
+        working-directory: jbpm
+        run: |
+          mvn test \
+            -pl jbpm-case-mgmt/jbpm-case-mgmt-impl \
+            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries
+
+      - name: Run test WITH NonDex
+        working-directory: jbpm
+        run: |
+          mvn edu.illinois:nondex-maven-plugin:2.1.1:nondex \
+            -pl jbpm-case-mgmt/jbpm-case-mgmt-impl \
+            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries
