@@ -1,0 +1,40 @@
+name: "Test - gora: TestHiveStore#testResultSize"
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  confirm-flaky:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Java 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Clone gora at specific SHA
+        run: |
+          git clone https://github.com/apache/gora.git
+          cd gora
+          git checkout 6c6b06c916b969352a6757ba7025cc78055fa87a
+      - name: Build module and dependencies
+        working-directory: gora
+        run: |
+          mvn clean install -DskipTests \
+            -pl gora-hive -am
+      - name: Run test WITHOUT NonDex
+        working-directory: gora
+        run: |
+          mvn test \
+            -pl gora-hive \
+            -Dtest=org.apache.gora.hive.store.TestHiveStore#testResultSize
+      - name: Run test WITH NonDex
+        working-directory: gora
+        run: |
+          mvn edu.illinois:nondex-maven-plugin:2.1.1:nondex \
+            -pl gora-hive \
+            -Dtest=org.apache.gora.hive.store.TestHiveStore#testResultSize
