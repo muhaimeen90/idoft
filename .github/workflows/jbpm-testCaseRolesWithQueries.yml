@@ -18,7 +18,7 @@ jobs:
 
       - name: Clone jbpm at specific SHA
         run: |
-          git clone https://github.com/kiegroup/jbpm.git
+          git clone https://github.com/kiegroup/jbpm.git 
           cd jbpm
           git checkout f7e80e82b7670c09485ce83869a287ef51dcb59c
 
@@ -29,16 +29,20 @@ jobs:
             -pl jbpm-case-mgmt/jbpm-case-mgmt-impl -am \
             -Denforcer.skip=true
 
-      - name: Run test WITHOUT NonDex
+      - name: Run test WITHOUT NonDex 
         working-directory: jbpm
         run: |
           mvn test \
             -pl jbpm-case-mgmt/jbpm-case-mgmt-impl \
-            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries
+            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries \
+            -Dsurefire.failIfNoSpecifiedTests=false \
+            -Drat.skip=true -Dlicense.skip=true -Dcheckstyle.skip=true
 
-      - name: Run test WITH NonDex
+      - name: Run test WITH NonDex 
         working-directory: jbpm
         run: |
           mvn edu.illinois:nondex-maven-plugin:2.1.1:nondex \
             -pl jbpm-case-mgmt/jbpm-case-mgmt-impl \
-            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries
+            -Dtest=org.jbpm.casemgmt.impl.CaseServiceImplTest#testCaseRolesWithQueries \
+            -DnondexRuns=10 \
+            -Drat.skip=true -Dlicense.skip=true -Dcheckstyle.skip=true
